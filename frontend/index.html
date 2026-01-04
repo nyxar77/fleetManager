@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scooter Fleet Manager</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-bolt"></i>
+          <h1>FleetManager</h1>
+          <span class="version">v2.0</span>
+        </div>
+        <div class="nav-links">
+          <a href="#" class="nav-link active" data-page="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-link" data-page="scooters">
+            <i class="fas fa-scooter"></i>
+            <span>Scooters</span>
+          </a>
+          <a href="#" class="nav-link" data-page="trips">
+            <i class="fas fa-route"></i>
+            <span>Trips</span>
+          </a>
+          <a href="#" class="nav-link" data-page="reports">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+          </a>
+          <a href="#" class="nav-link" data-page="monitor">
+            <i class="fas fa-shield-alt"></i>
+            <span>Monitor</span>
+          </a>
+        </div>
+        <div class="nav-user">
+          <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <div class="user-details">
+              <span class="user-name">Admin</span>
+              <span class="user-role">Fleet Manager</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <section class="page active" id="dashboard">
+        <div class="page-header">
+          <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+          <div class="header-actions">
+            <button class="btn btn-primary" id="refreshBtn">
+              <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-scooter"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="totalScooters">0</span>
+              <span class="stat-label">Total Scooters</span>
+            </div>
+            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 12%</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon available">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="availableScooters">0</span>
+              <span class="stat-label">Available</span>
+            </div>
+            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 8%</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon unavailable">
+              <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="unavailableScooters">0</span>
+              <span class="stat-label">Unavailable</span>
+            </div>
+            <div class="stat-trend down">
+              <i class="fas fa-arrow-down"></i> 3%
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon charging">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value" id="lowBattery">0</span>
+              <span class="stat-label">Low Battery</span>
+            </div>
+            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 5%</div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="actions-grid">
+            <button class="action-btn" data-action="add-scooter">
+              <i class="fas fa-plus-circle"></i>
+              <span>Add Scooter</span>
+            </button>
+            <button class="action-btn" data-action="simulate-trips">
+              <i class="fas fa-play-circle"></i>
+              <span>Simulate Trips</span>
+            </button>
+            <button class="action-btn" data-action="quick-charge">
+              <i class="fas fa-charging-station"></i>
+              <span>Quick Charge</span>
+            </button>
+            <button class="action-btn" data-action="generate-report">
+              <i class="fas fa-file-export"></i>
+              <span>Generate Report</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="recent-section">
+          <div class="section-header">
+            <h3>Recent Scooters</h3>
+            <a href="#" class="view-all" data-page="scooters">View All</a>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Model</th>
+                  <th>Battery</th>
+                  <th>Status</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentScootersTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="scooters">
+        <div class="page-header">
+          <h2><i class="fas fa-scooter"></i> Scooter Management</h2>
+          <div class="header-actions">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Search scooters..."
+                id="searchScooter"
+              />
+            </div>
+            <button class="btn btn-primary" id="addScooterBtn">
+              <i class="fas fa-plus"></i> Add Scooter
+            </button>
+          </div>
+        </div>
+
+        <div class="filters">
+          <div class="filter-group">
+            <label>Status:</label>
+            <select id="statusFilter">
+              <option value="all">All</option>
+              <option value="available">Available</option>
+              <option value="unavailable">Unavailable</option>
+              <option value="charging">Charging</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Model:</label>
+            <select id="modelFilter">
+              <option value="all">All Models</option>
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+              <option value="xiaomi">Xiaomi</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Battery:</label>
+            <select id="batteryFilter">
+              <option value="all">All</option>
+              <option value="low">Low (&lt;30%)</option>
+              <option value="critical">Critical (&lt;10%)</option>
+              <option value="full">Full (100%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>
+                  <input type="checkbox" id="selectAll" />
+                </th>
+                <th>ID</th>
+                <th>Model</th>
+                <th>Battery</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Last Used</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="scootersTable"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="page-btn" disabled>
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span class="page-info">Page 1 of 5</span>
+          <button class="page-btn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <section class="page" id="trips">
+        <div class="page-header">
+          <h2><i class="fas fa-route"></i> Trip Management</h2>
+          <div class="header-actions">
+            <button class="btn btn-primary" id="simulateTripBtn">
+              <i class="fas fa-play"></i> Simulate Trip
+            </button>
+            <button class="btn btn-secondary" id="calculateCostBtn">
+              <i class="fas fa-calculator"></i> Calculate Cost
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h4>Trip Simulation</h4>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="tripCount">Number of Trips:</label>
+                <input
+                  type="number"
+                  id="tripCount"
+                  min="1"
+                  max="50"
+                  value="5"
+                />
+              </div>
+              <div class="form-group">
+                <label for="tripDistance">Distance (km):</label>
+                <input
+                  type="range"
+                  id="tripDistance"
+                  min="0.5"
+                  max="20"
+                  step="0.5"
+                  value="3"
+                />
+                <span id="distanceValue">3 km</span>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary" id="runSimulationBtn">
+                  <i class="fas fa-play"></i> Run Simulation
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h4>Cost Calculator</h4>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="calcDistance">Enter Distance (km):</label>
+              <input
+                type="number"
+                id="calcDistance"
+                step="0.1"
+                min="0.1"
+                placeholder="e.g., 5.5"
+              />
+            </div>
+            <div class="cost-breakdown" id="costBreakdown"></div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <h3>Active Trips</h3>
+          <span class="badge" id="activeTripsCount">0 active</span>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Trip ID</th>
+                <th>Scooter ID</th>
+                <th>Distance</th>
+                <th>Cost</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="activeTripsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="page" id="reports">
+        <div class="page-header">
+          <h2><i class="fas fa-chart-bar"></i> Reports & Analytics</h2>
+          <div class="header-actions">
+            <button class="btn btn-secondary">
+              <i class="fas fa-download"></i> Export PDF
+            </button>
+            <button class="btn btn-primary" id="generateReportBtn">
+              <i class="fas fa-sync-alt"></i> Generate Report
+            </button>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-card">
+            <div class="report-header">
+              <h4>Fleet Overview</h4>
+              <i class="fas fa-scooter"></i>
+            </div>
+            <div class="report-content">
+              <canvas id="fleetChart"></canvas>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-header">
+              <h4>Battery Health</h4>
+              <i class="fas fa-battery-full"></i>
+            </div>
+            <div class="report-content">
+              <div class="battery-stats">
+                <div class="battery-stat">
+                  <span class="battery-level full">100%</span>
+                  <span>Full</span>
+                  <span class="battery-count" id="batteryFull">0</span>
+                </div>
+                <div class="battery-stat">
+                  <span class="battery-level medium">50%</span>
+                  <span>Medium</span>
+                  <span class="battery-count" id="batteryMedium">0</span>
+                </div>
+                <div class="battery-stat">
+                  <span class="battery-level low">30%</span>
+                  <span>Low</span>
+                  <span class="battery-count" id="batteryLow">0</span>
+                </div>
+                <div class="battery-stat">
+                  <span class="battery-level critical">10%</span>
+                  <span>Critical</span>
+                  <span class="battery-count" id="batteryCritical">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-header">
+              <h4>Revenue</h4>
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="report-content">
+              <div class="revenue-stats">
+                <div class="revenue-stat">
+                  <span class="revenue-label">Today</span>
+                  <span class="revenue-value">$245.50</span>
+                </div>
+                <div class="revenue-stat">
+                  <span class="revenue-label">This Week</span>
+                  <span class="revenue-value">$1,850.75</span>
+                </div>
+                <div class="revenue-stat">
+                  <span class="revenue-label">This Month</span>
+                  <span class="revenue-value">$7,420.30</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h4>Recent Anomalies</h4>
+            <span class="badge badge-danger" id="anomalyCount"
+              >0 anomalies</span
+            >
+          </div>
+          <div class="card-body">
+            <div class="anomalies-list" id="anomaliesList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="monitor">
+        <div class="page-header">
+          <h2><i class="fas fa-shield-alt"></i> Real-time Monitoring</h2>
+          <div class="header-actions">
+            <div class="monitoring-status">
+              <span class="status-indicator active"></span>
+              <span>Monitoring Active</span>
+            </div>
+            <button class="btn btn-secondary" id="toggleMonitor">
+              <i class="fas fa-pause"></i> Pause Monitoring
+            </button>
+          </div>
+        </div>
+
+        <div class="alerts-container">
+          <div class="alerts-header">
+            <h3>Live Alerts</h3>
+            <button class="btn btn-sm" id="clearAlerts">
+              <i class="fas fa-trash"></i> Clear All
+            </button>
+          </div>
+          <div class="alerts-list" id="alertsList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h4>Fleet Location Map</h4>
+          </div>
+          <div class="card-body">
+            <div class="map-placeholder" id="mapContainer">
+              <div class="map-overlay">
+                <i class="fas fa-map-marked-alt"></i>
+                <p>Live map would display here</p>
+                <p class="map-note">Connected to backend API</p>
+              </div>
+            </div>
+            <div class="map-legend">
+              <div class="legend-item">
+                <span class="legend-dot available"></span>
+                Available
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot charging"></span>
+                Charging
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot unavailable"></span>
+                Unavailable
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot anomaly"></span>
+                Anomaly
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="health-grid">
+          <div class="health-card">
+            <h5>API Status</h5>
+            <div class="health-status">
+              <span class="status-indicator active"></span>
+              <span>Connected</span>
+            </div>
+            <div class="health-info">
+              <span>Response Time: 120ms</span>
+              <span>Uptime: 99.8%</span>
+            </div>
+          </div>
+          <div class="health-card">
+            <h5>Database</h5>
+            <div class="health-status">
+              <span class="status-indicator active"></span>
+              <span>Healthy</span>
+            </div>
+            <div class="health-info">
+              <span>Size: 2.4 GB</span>
+              <span>Queries: 1,240/min</span>
+            </div>
+          </div>
+          <div class="health-card">
+            <h5>Server Load</h5>
+            <div class="health-status">
+              <span class="status-indicator warning"></span>
+              <span>Moderate</span>
+            </div>
+            <div class="health-info">
+              <span>CPU: 65%</span>
+              <span>Memory: 3.2/8 GB</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal" id="addScooterModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-plus-circle"></i> Add New Scooter</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="addScooterForm">
+            <div class="form-group">
+              <label for="scooterModel">Model</label>
+              <select id="scooterModel" required>
+                <option value="">Select Model</option>
+                <option value="standard">Standard</option>
+                <option value="premium">Premium</option>
+                <option value="xiaomi">Xiaomi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="scooterBattery">Initial Battery (%)</label>
+              <input
+                type="range"
+                id="scooterBattery"
+                min="0"
+                max="100"
+                value="100"
+              />
+              <span class="battery-display">100%</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input
+                  type="number"
+                  id="latitude"
+                  step="0.0001"
+                  value="48.8566"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input
+                  type="number"
+                  id="longitude"
+                  step="0.0001"
+                  value="2.3522"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary modal-close">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">Add Scooter</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="scooterDetailsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-scooter"></i> Scooter Details</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="scooter-details" id="scooterDetailsContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="chargeScooterModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-charging-station"></i> Recharge Scooter</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="current-battery" id="currentBattery">
+            <div class="battery-visual">
+              <div class="battery-level" style="width: 65%"></div>
+            </div>
+            <span>65%</span>
+          </div>
+          <div class="form-group">
+            <label for="chargeMinutes">Charge Duration (minutes)</label>
+            <input
+              type="range"
+              id="chargeMinutes"
+              min="5"
+              max="60"
+              step="5"
+              value="20"
+            />
+            <span class="charge-display">20 minutes (+100%)</span>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary modal-close">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="startChargeBtn">
+              Start Charging
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner">
+        <i class="fas fa-sync fa-spin"></i>
+        <p>Loading...</p>
+      </div>
+    </div>
+  </body>
+</html>
