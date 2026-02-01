@@ -1,3 +1,0 @@
-/home/nyxar/Programming/projects/fleetManager/fleetManagerMINIv2/build/CMakeFiles/fleetManager.dir
-/home/nyxar/Programming/projects/fleetManager/fleetManagerMINIv2/build/CMakeFiles/edit_cache.dir
-/home/nyxar/Programming/projects/fleetManager/fleetManagerMINIv2/build/CMakeFiles/rebuild_cache.dir
