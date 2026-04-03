@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "A setup for fleetManager";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
